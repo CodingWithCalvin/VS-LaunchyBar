@@ -1,0 +1,60 @@
+name: Publish
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    env:
+      SolutionPath: src/CodingWithCalvin.LaunchyBar.slnx
+      VsixPath: src/CodingWithCalvin.LaunchyBar/bin/Release/CodingWithCalvin.LaunchyBar.vsix
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Restore NuGet packages
+        run: dotnet restore ${{ env.SolutionPath }}
+
+      - name: Build
+        run: dotnet build ${{ env.SolutionPath }} --configuration Release --no-restore
+
+      - name: Upload VSIX artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vsix
+          path: ${{ env.VsixPath }}
+
+  publish:
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: build
+    runs-on: windows-latest
+
+    steps:
+      - name: Download VSIX artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: vsix
+
+      - name: Publish to VS Marketplace
+        uses: cezarypiatek/VssExtensionPublishAction@v1
+        with:
+          vsix-file: CodingWithCalvin.LaunchyBar.vsix
+          publish-manifest-file: ${{ github.workspace }}/vs-publish.json
+          personal-access-token: ${{ secrets.VS_MARKETPLACE_PAT }}

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <Extern href="stdidcmd.h" />
+  <Extern href="vsshlids.h" />
+
+  <Commands package="guidLaunchyBarPackage">
+    <Groups>
+      <Group guid="guidLaunchyBarCmdSet" id="LaunchyBarMenuGroup" priority="0x0600">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_VIEW" />
+      </Group>
+    </Groups>
+
+    <Buttons>
+      <Button guid="guidLaunchyBarCmdSet" id="LaunchyBarWindowCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidLaunchyBarCmdSet" id="LaunchyBarMenuGroup" />
+        <Icon guid="guidImages" id="launchyBarIcon" />
+        <Strings>
+          <ButtonText>LaunchyBar</ButtonText>
+        </Strings>
+      </Button>
+    </Buttons>
+
+    <Bitmaps>
+      <Bitmap guid="guidImages" href="..\..\resources\CommandIcon.png" usedList="launchyBarIcon" />
+    </Bitmaps>
+  </Commands>
+
+  <Symbols>
+    <GuidSymbol name="guidLaunchyBarPackage" value="{a1b2c3d4-e5f6-7890-abcd-ef1234567890}" />
+
+    <GuidSymbol name="guidLaunchyBarToolWindow" value="{b2c3d4e5-f6a7-8901-bcde-f12345678901}" />
+
+    <GuidSymbol name="guidLaunchyBarCmdSet" value="{c3d4e5f6-a7b8-9012-cdef-123456789012}">
+      <IDSymbol name="LaunchyBarMenuGroup" value="0x1020" />
+      <IDSymbol name="LaunchyBarWindowCommandId" value="0x0100" />
+    </GuidSymbol>
+
+    <GuidSymbol name="guidImages" value="{d4e5f6a7-b8c9-0123-def0-1234567890ab}">
+      <IDSymbol name="launchyBarIcon" value="1" />
+    </GuidSymbol>
+  </Symbols>
+</CommandTable>

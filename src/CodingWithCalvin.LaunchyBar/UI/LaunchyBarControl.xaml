@@ -7,7 +7,7 @@
              xmlns:imaging="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.Imaging"
              mc:Ignorable="d"
              d:DesignHeight="600" d:DesignWidth="48"
-             Background="{DynamicResource {x:Static vs:VsBrushes.CommandBarGradientBeginKey}}">
+             Background="#FF2D2D30">
 
   <UserControl.Resources>
     <Style x:Key="LaunchyBarButtonStyle" TargetType="Button">
@@ -52,12 +52,17 @@
 
   <Grid>
     <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
       <RowDefinition Height="*"/>
       <RowDefinition Height="Auto"/>
     </Grid.RowDefinitions>
 
+    <!-- Debug indicator -->
+    <TextBlock Grid.Row="0" Text="LB" Foreground="White" FontWeight="Bold"
+               HorizontalAlignment="Center" Margin="0,10,0,10"/>
+
     <!-- Top Items (flow down) -->
-    <ItemsControl Grid.Row="0"
+    <ItemsControl Grid.Row="1"
                   ItemsSource="{Binding TopItems}"
                   VerticalAlignment="Top">
       <ItemsControl.ItemTemplate>
@@ -75,7 +80,7 @@
     </ItemsControl>
 
     <!-- Bottom Items (flow up) -->
-    <ItemsControl Grid.Row="1"
+    <ItemsControl Grid.Row="2"
                   ItemsSource="{Binding BottomItems}"
                   VerticalAlignment="Bottom">
       <ItemsControl.ItemTemplate>

@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,9 +19,8 @@ public sealed class ShellInjectionService : IShellInjectionService
     private readonly ILaunchService _launchService;
 
     private LaunchyBarControl? _barControl;
-    private Grid? _injectedGrid;
-    private FrameworkElement? _originalContent;
-    private ContentPresenter? _targetPresenter;
+    private Grid? _targetGrid;
+    private ColumnDefinition? _injectedColumn;
 
     private const double BarWidth = 48;
 
@@ -35,26 +36,45 @@ public sealed class ShellInjectionService : IShellInjectionService
     {
         ThreadHelper.ThrowIfNotOnUIThread();
 
+        Debug.WriteLine("LaunchyBar: Inject() called");
+
         if (IsInjected)
+        {
+            Debug.WriteLine("LaunchyBar: Already injected");
             return true;
+        }
 
         try
         {
             var mainWindow = Application.Current.MainWindow;
             if (mainWindow == null)
+            {
+                Debug.WriteLine("LaunchyBar: MainWindow is null");
                 return false;
+            }
 
-            // Find the main content area - we're looking for the area between toolbar and status bar
-            // This requires walking VS's visual tree to find the right injection point
-            var injectionTarget = FindInjectionTarget(mainWindow);
-            if (injectionTarget == null)
+            Debug.WriteLine($"LaunchyBar: MainWindow found - {mainWindow.GetType().FullName}, Size: {mainWindow.ActualWidth}x{mainWindow.ActualHeight}");
+
+            // Find the main layout grid
+            _targetGrid = FindMainLayoutGrid(mainWindow);
+            if (_targetGrid == null)
+            {
+                Debug.WriteLine("LaunchyBar: Could not find main layout grid");
                 return false;
+            }
 
-            _targetPresenter = injectionTarget;
-            _originalContent = injectionTarget.Content as FrameworkElement;
+            Debug.WriteLine($"LaunchyBar: Found target grid with {_targetGrid.RowDefinitions.Count} rows, {_targetGrid.ColumnDefinitions.Count} columns");
+            Debug.WriteLine($"LaunchyBar: Grid size: {_targetGrid.ActualWidth}x{_targetGrid.ActualHeight}");
 
-            if (_originalContent == null)
-                return false;
+            // Log existing children
+            foreach (UIElement child in _targetGrid.Children)
+            {
+                var childRow = Grid.GetRow(child);
+                var childCol = Grid.GetColumn(child);
+                var childRowSpan = Grid.GetRowSpan(child);
+                var childColSpan = Grid.GetColumnSpan(child);
+                Debug.WriteLine($"LaunchyBar:   Child: {child.GetType().Name} at Row={childRow}, Col={childCol}, RowSpan={childRowSpan}, ColSpan={childColSpan}");
+            }
 
             // Create our bar control
             _barControl = new LaunchyBarControl(_configurationService, _launchService);
@@ -62,29 +82,45 @@ public sealed class ShellInjectionService : IShellInjectionService
             _barControl.HorizontalAlignment = HorizontalAlignment.Left;
             _barControl.VerticalAlignment = VerticalAlignment.Stretch;
 
-            // Create a new grid to hold both the bar and the original content
-            _injectedGrid = new Grid();
-            _injectedGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(BarWidth) });
-            _injectedGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+            // Check if grid originally had column definitions
+            var hadColumns = _targetGrid.ColumnDefinitions.Count > 0;
+            Debug.WriteLine($"LaunchyBar: Grid originally had {_targetGrid.ColumnDefinitions.Count} columns");
 
-            // Remove original content from its parent
-            injectionTarget.Content = null;
+            // If the grid had no columns, we need to add one for the existing content
+            if (!hadColumns)
+            {
+                // Add a Star column for existing content first
+                _targetGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+                Debug.WriteLine("LaunchyBar: Added Star column for existing content");
+            }
 
-            // Add bar to column 0
+            // Insert our bar column at the beginning
+            _injectedColumn = new ColumnDefinition { Width = new GridLength(BarWidth) };
+            _targetGrid.ColumnDefinitions.Insert(0, _injectedColumn);
+
+            // Shift all existing children to the right by incrementing their column
+            foreach (UIElement child in _targetGrid.Children)
+            {
+                var currentCol = Grid.GetColumn(child);
+                Grid.SetColumn(child, currentCol + 1);
+                Debug.WriteLine($"LaunchyBar:   Shifted {child.GetType().Name} from col {currentCol} to {currentCol + 1}");
+            }
+
+            // Add our bar at column 0, spanning all rows (top to bottom)
             Grid.SetColumn(_barControl, 0);
-            _injectedGrid.Children.Add(_barControl);
+            Grid.SetRow(_barControl, 0);
+            Grid.SetRowSpan(_barControl, Math.Max(1, _targetGrid.RowDefinitions.Count));
+            _targetGrid.Children.Add(_barControl);
 
-            // Add original content to column 1
-            Grid.SetColumn(_originalContent, 1);
-            _injectedGrid.Children.Add(_originalContent);
-
-            // Set our grid as the new content
-            injectionTarget.Content = _injectedGrid;
+            Debug.WriteLine("LaunchyBar: Injection successful!");
+            Debug.WriteLine($"LaunchyBar: Bar at column 0, spanning {Grid.GetRowSpan(_barControl)} rows");
 
             return true;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            Debug.WriteLine($"LaunchyBar: Exception during injection - {ex.Message}");
+            Debug.WriteLine($"LaunchyBar: Stack trace: {ex.StackTrace}");
             Remove();
             return false;
         }
@@ -94,12 +130,25 @@ public sealed class ShellInjectionService : IShellInjectionService
     {
         ThreadHelper.ThrowIfNotOnUIThread();
 
-        if (_targetPresenter != null && _originalContent != null && _injectedGrid != null)
+        if (_targetGrid != null && _barControl != null && _injectedColumn != null)
         {
             try
             {
-                _injectedGrid.Children.Clear();
-                _targetPresenter.Content = _originalContent;
+                // Remove our bar
+                _targetGrid.Children.Remove(_barControl);
+
+                // Shift all children back
+                foreach (UIElement child in _targetGrid.Children)
+                {
+                    var currentCol = Grid.GetColumn(child);
+                    if (currentCol > 0)
+                    {
+                        Grid.SetColumn(child, currentCol - 1);
+                    }
+                }
+
+                // Remove our column
+                _targetGrid.ColumnDefinitions.Remove(_injectedColumn);
             }
             catch
             {
@@ -108,108 +157,79 @@ public sealed class ShellInjectionService : IShellInjectionService
         }
 
         _barControl = null;
-        _injectedGrid = null;
-        _originalContent = null;
-        _targetPresenter = null;
+        _targetGrid = null;
+        _injectedColumn = null;
     }
 
     /// <summary>
-    /// Finds the ContentPresenter that contains the main VS content area.
-    /// This is the area between the toolbar and status bar.
+    /// Finds the main layout Grid in VS's visual tree.
+    /// This should be the grid that contains the toolbar and main content area.
     /// </summary>
-    private ContentPresenter? FindInjectionTarget(Window mainWindow)
+    private Grid? FindMainLayoutGrid(Window mainWindow)
     {
-        // Strategy: Walk the visual tree looking for a ContentPresenter
-        // that contains the main dock/editor area.
-        // This is fragile and may need adjustment for different VS versions.
-
-        // Look for a ContentPresenter with a specific name or structure
-        // VS typically has a structure like:
-        // MainWindow > ... > DockPanel > [Toolbar, ContentPresenter (main area), StatusBar]
-
-        return FindContentPresenterRecursive(mainWindow, 0);
+        // Walk the visual tree to find the main layout grid
+        // We're looking for a large grid that contains the main VS content
+        return FindMainGridRecursive(mainWindow, 0);
     }
 
-    private ContentPresenter? FindContentPresenterRecursive(DependencyObject parent, int depth)
+    private Grid? FindMainGridRecursive(DependencyObject parent, int depth)
     {
-        if (depth > 20) // Prevent infinite recursion
+        if (depth > 15)
             return null;
 
         var childCount = VisualTreeHelper.GetChildrenCount(parent);
+        var indent = new string(' ', depth * 2);
 
         for (int i = 0; i < childCount; i++)
         {
             var child = VisualTreeHelper.GetChild(parent, i);
 
-            // Look for ContentPresenter that might be our target
-            if (child is ContentPresenter cp)
+            if (depth < 5)
             {
-                // Check if this ContentPresenter's content looks like the main content area
-                if (IsMainContentArea(cp))
+                Debug.WriteLine($"LaunchyBar: {indent}[{depth}] {child.GetType().Name}");
+            }
+
+            if (child is Grid grid)
+            {
+                // Look for a grid that:
+                // 1. Is large enough
+                // 2. Has row definitions (VS uses rows for title/toolbar/content/statusbar)
+                // 3. Contains relevant VS controls
+                if (grid.ActualWidth > 400 && grid.ActualHeight > 300)
                 {
-                    return cp;
+                    Debug.WriteLine($"LaunchyBar: {indent}  Grid candidate: {grid.ActualWidth}x{grid.ActualHeight}, Rows={grid.RowDefinitions.Count}, Cols={grid.ColumnDefinitions.Count}");
+
+                    // Check if this grid contains VsToolBarHostControl or similar
+                    if (ContainsVsContent(grid))
+                    {
+                        Debug.WriteLine($"LaunchyBar: {indent}  ** MATCHED - contains VS content **");
+                        return grid;
+                    }
                 }
             }
 
-            // Also check for Grid with DockPanel children - common VS structure
-            if (child is Grid grid)
-            {
-                // Look for the main content grid that has the editor/tool area
-                var result = FindContentPresenterRecursive(grid, depth + 1);
-                if (result != null)
-                    return result;
-            }
-
-            if (child is DockPanel dockPanel)
-            {
-                var result = FindContentPresenterRecursive(dockPanel, depth + 1);
-                if (result != null)
-                    return result;
-            }
-
-            if (child is Border border)
-            {
-                var result = FindContentPresenterRecursive(border, depth + 1);
-                if (result != null)
-                    return result;
-            }
-
-            if (child is Decorator decorator)
-            {
-                var result = FindContentPresenterRecursive(decorator, depth + 1);
-                if (result != null)
-                    return result;
-            }
+            // Continue searching
+            var result = FindMainGridRecursive(child, depth + 1);
+            if (result != null)
+                return result;
         }
 
         return null;
     }
 
-    private bool IsMainContentArea(ContentPresenter cp)
+    private bool ContainsVsContent(Grid grid)
     {
-        // Heuristics to identify the main content area:
-        // 1. Should be reasonably large
-        // 2. Should contain dock-related content
-
-        if (cp.ActualWidth < 400 || cp.ActualHeight < 300)
-            return false;
-
-        // Check if the content's type name contains dock-related keywords
-        var content = cp.Content;
-        if (content == null)
-            return false;
-
-        var typeName = content.GetType().FullName ?? "";
-
-        // VS's main content area typically has these in the type hierarchy
-        if (typeName.Contains("Dock") ||
-            typeName.Contains("ViewManager") ||
-            typeName.Contains("MainWindow") ||
-            typeName.Contains("Workspace"))
+        foreach (UIElement child in grid.Children)
         {
-            return true;
+            var typeName = child.GetType().Name;
+            // Look for VS-specific controls that indicate this is the main layout grid
+            if (typeName.Contains("ToolBar") ||
+                typeName.Contains("DockPanel") ||
+                typeName.Contains("MainWindowTitleBar"))
+            {
+                return true;
+            }
         }
-
         return false;
     }
 

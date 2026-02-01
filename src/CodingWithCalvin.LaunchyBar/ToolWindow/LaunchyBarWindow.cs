@@ -28,6 +28,20 @@ public sealed class LaunchyBarWindow : ToolWindowPane
     /// </summary>
     public static async Task ShowAsync()
     {
-        await VS.Windows.ShowToolWindowAsync(new Guid(VSCommandTableVsct.guidLaunchyBarToolWindowString));
+        await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+        var package = LaunchyBarPackage.Instance;
+        if (package == null) return;
+
+        var window = await package.FindToolWindowAsync(
+            typeof(LaunchyBarWindow),
+            0,
+            create: true,
+            package.DisposalToken);
+
+        if (window?.Frame is Microsoft.VisualStudio.Shell.Interop.IVsWindowFrame frame)
+        {
+            Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(frame.Show());
+        }
     }
 }

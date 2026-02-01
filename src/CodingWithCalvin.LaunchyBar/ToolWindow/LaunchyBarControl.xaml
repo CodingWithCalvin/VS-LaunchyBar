@@ -4,64 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:vs="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
-             xmlns:catalog="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.ImageCatalog"
-             xmlns:imaging="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.Imaging"
-             xmlns:theming="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
              mc:Ignorable="d"
              d:DesignHeight="600" d:DesignWidth="48"
-             Background="{DynamicResource {x:Static vs:VsBrushes.ToolWindowBackgroundKey}}"
-             theming:ImageThemingUtilities.ImageBackgroundColor="{DynamicResource {x:Static vs:VsColors.ToolWindowBackgroundKey}}">
-
-  <UserControl.Resources>
-    <ResourceDictionary>
-      <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="../Themes/LaunchyBarStyles.xaml"/>
-      </ResourceDictionary.MergedDictionaries>
-    </ResourceDictionary>
-  </UserControl.Resources>
+             Background="{DynamicResource {x:Static vs:VsBrushes.ToolWindowBackgroundKey}}">
 
   <Grid>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="*"/>
-      <RowDefinition Height="Auto"/>
-    </Grid.RowDefinitions>
-
-    <!-- Top Items (flow down) -->
-    <ItemsControl Grid.Row="0"
-                  ItemsSource="{Binding TopItems}"
-                  VerticalAlignment="Top">
-      <ItemsControl.ItemTemplate>
-        <DataTemplate>
-          <Button Style="{StaticResource LaunchyBarButtonStyle}"
-                  Command="{Binding DataContext.LaunchCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                  CommandParameter="{Binding}"
-                  ToolTip="{Binding Name}"
-                  IsEnabled="{Binding IsEnabled}">
-            <imaging:CrispImage x:Name="ButtonImage"
-                                Width="24" Height="24"
-                                Moniker="{Binding IconMoniker}" />
-          </Button>
-        </DataTemplate>
-      </ItemsControl.ItemTemplate>
-    </ItemsControl>
-
-    <!-- Bottom Items (flow up) -->
-    <ItemsControl Grid.Row="1"
-                  ItemsSource="{Binding BottomItems}"
-                  VerticalAlignment="Bottom">
-      <ItemsControl.ItemTemplate>
-        <DataTemplate>
-          <Button Style="{StaticResource LaunchyBarButtonStyle}"
-                  Command="{Binding DataContext.LaunchCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                  CommandParameter="{Binding}"
-                  ToolTip="{Binding Name}"
-                  IsEnabled="{Binding IsEnabled}">
-            <imaging:CrispImage x:Name="ButtonImage"
-                                Width="24" Height="24"
-                                Moniker="{Binding IconMoniker}" />
-          </Button>
-        </DataTemplate>
-      </ItemsControl.ItemTemplate>
-    </ItemsControl>
+    <TextBlock Text="LaunchyBar"
+               Foreground="{DynamicResource {x:Static vs:VsBrushes.ToolWindowTextKey}}"
+               VerticalAlignment="Center"
+               HorizontalAlignment="Center"
+               TextWrapping="Wrap"/>
   </Grid>
 </UserControl>

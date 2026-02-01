@@ -16,21 +16,10 @@ namespace CodingWithCalvin.LaunchyBar;
 [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
 [Guid(VSCommandTableVsct.guidLaunchyBarPackageString)]
 [ProvideMenuResource("Menus.ctmenu", 1)]
-[ProvideToolWindow(
-    typeof(LaunchyBarWindow),
-    Style = VsDockStyle.MDI,
-    Orientation = ToolWindowOrientation.Left,
-    Width = 60,
-    Height = 600,
-    Window = "3ae79031-e1bc-11d0-8f78-00a0c9110057")]
-[ProvideToolWindowVisibility(typeof(LaunchyBarWindow), VSConstants.UICONTEXT.NoSolution_string)]
-[ProvideToolWindowVisibility(typeof(LaunchyBarWindow), VSConstants.UICONTEXT.SolutionExists_string)]
-[ProvideToolWindowVisibility(typeof(LaunchyBarWindow), VSConstants.UICONTEXT.EmptySolution_string)]
+[ProvideToolWindow(typeof(LaunchyBarWindow))]
 [ProvideAutoLoad(VSConstants.UICONTEXT.ShellInitialized_string, PackageAutoLoadFlags.BackgroundLoad)]
-[ProvideAutoLoad(VSConstants.UICONTEXT.NoSolution_string, PackageAutoLoadFlags.BackgroundLoad)]
-[ProvideAutoLoad(VSConstants.UICONTEXT.SolutionExists_string, PackageAutoLoadFlags.BackgroundLoad)]
 [ProvideOptionPage(typeof(OptionsProvider.GeneralOptionsPage), "LaunchyBar", "General", 0, 0, true)]
-public sealed class LaunchyBarPackage : AsyncPackage
+public sealed class LaunchyBarPackage : ToolkitPackage
 {
     public static LaunchyBarPackage? Instance { get; private set; }
 
@@ -63,24 +52,6 @@ public sealed class LaunchyBarPackage : AsyncPackage
         LaunchService = new LaunchService(this);
 
         await this.RegisterCommandsAsync();
-
-        await ShowToolWindowAsync(cancellationToken);
-    }
-
-    private async Task ShowToolWindowAsync(CancellationToken cancellationToken)
-    {
-        await JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
-
-        var window = await FindToolWindowAsync(
-            typeof(LaunchyBarWindow),
-            0,
-            create: true,
-            cancellationToken);
-
-        if (window?.Frame is IVsWindowFrame windowFrame)
-        {
-            Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
-        }
     }
 
     protected override void Dispose(bool disposing)

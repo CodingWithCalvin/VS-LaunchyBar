@@ -85,7 +85,9 @@ public sealed class AsyncRelayCommand : ICommand
     }
 
     /// <inheritdoc/>
+#pragma warning disable VSTHRD100 // Avoid async void - required by ICommand interface
     public async void Execute(object? parameter)
+#pragma warning restore VSTHRD100
     {
         if (_isExecuting)
         {
@@ -98,6 +100,10 @@ public sealed class AsyncRelayCommand : ICommand
         try
         {
             await _execute(parameter);
+        }
+        catch (Exception)
+        {
+            // Swallow exceptions to prevent crash - commands should handle their own errors
         }
         finally
         {

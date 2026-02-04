@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json.schemastore.org/vsix-publish",
+  "categories": [
+    "coding",
+    "other"
+  ],
+  "identity": {
+    "internalName": "VS-LaunchyBar"
+  },
+  "overview": "../README.md",
+  "publisher": "CodingWithCalvin",
+  "qna": true,
+  "repo": "https://github.com/CodingWithCalvin/VS-LaunchyBar"
+}

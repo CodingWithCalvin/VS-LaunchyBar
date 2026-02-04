@@ -45,6 +45,12 @@ If you've used VS Code or JetBrains IDEs, you're probably familiar with the Acti
 - 🐞 **Smart Debug Button** - Automatically switches between Start and Stop based on debugger state
 - 🎨 **Native Look** - Seamlessly integrates with Visual Studio's theme
 
+## 🖼️ Screenshots
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/CodingWithCalvin/VS-LaunchyBar/main/resources/1-launchy-bar.png" alt="LaunchyBar in Visual Studio">
+</p>
+
 ## 🛠️ Installation
 
 ### Visual Studio Marketplace

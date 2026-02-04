@@ -41,14 +41,9 @@ If you've used VS Code or JetBrains IDEs, you're probably familiar with the Acti
 ## ✨ Features
 
 - 🎯 **Quick Access** - Launch frequently used tools with a single click
-- 🔧 **VS Commands** - Execute any Visual Studio command directly
 - 🪟 **Tool Windows** - Toggle tool windows like Solution Explorer, Terminal, and Git Changes (click again to hide)
 - 🐞 **Smart Debug Button** - Automatically switches between Start and Stop based on debugger state
 - 🎨 **Native Look** - Seamlessly integrates with Visual Studio's theme
-
-## 💡 Pro Tip
-
-Pair LaunchyBar with keyboard shortcuts for maximum productivity!
 
 ## 🛠️ Installation
 

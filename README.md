@@ -12,23 +12,23 @@
   <a href="https://github.com/CodingWithCalvin/VS-LaunchyBar/blob/main/LICENSE">
     <img src="https://img.shields.io/github/license/CodingWithCalvin/VS-LaunchyBar?style=for-the-badge" alt="License">
   </a>
-  <a href="https://github.com/CodingWithCalvin/VS-LaunchyBar/actions/workflows/publish.yml">
-    <img src="https://img.shields.io/github/actions/workflow/status/CodingWithCalvin/VS-LaunchyBar/publish.yml?style=for-the-badge" alt="Build Status">
+  <a href="https://github.com/CodingWithCalvin/VS-LaunchyBar/actions/workflows/build.yml">
+    <img src="https://img.shields.io/github/actions/workflow/status/CodingWithCalvin/VS-LaunchyBar/build.yml?style=for-the-badge" alt="Build Status">
   </a>
 </p>
 
 <p align="center">
-  <a href="https://marketplace.visualstudio.com/items?itemName=CodingWithCalvin.LaunchyBar">
-    <img src="https://img.shields.io/visual-studio-marketplace/v/CodingWithCalvin.LaunchyBar?style=for-the-badge" alt="Marketplace Version">
+  <a href="https://marketplace.visualstudio.com/items?itemName=CodingWithCalvin.VS-LaunchyBar">
+    <img src="https://img.shields.io/visual-studio-marketplace/v/CodingWithCalvin.VS-LaunchyBar?style=for-the-badge" alt="Marketplace Version">
   </a>
-  <a href="https://marketplace.visualstudio.com/items?itemName=CodingWithCalvin.LaunchyBar">
-    <img src="https://img.shields.io/visual-studio-marketplace/i/CodingWithCalvin.LaunchyBar?style=for-the-badge" alt="Installs">
+  <a href="https://marketplace.visualstudio.com/items?itemName=CodingWithCalvin.VS-LaunchyBar">
+    <img src="https://img.shields.io/visual-studio-marketplace/i/CodingWithCalvin.VS-LaunchyBar?style=for-the-badge" alt="Installs">
   </a>
-  <a href="https://marketplace.visualstudio.com/items?itemName=CodingWithCalvin.LaunchyBar">
-    <img src="https://img.shields.io/visual-studio-marketplace/d/CodingWithCalvin.LaunchyBar?style=for-the-badge" alt="Downloads">
+  <a href="https://marketplace.visualstudio.com/items?itemName=CodingWithCalvin.VS-LaunchyBar">
+    <img src="https://img.shields.io/visual-studio-marketplace/d/CodingWithCalvin.VS-LaunchyBar?style=for-the-badge" alt="Downloads">
   </a>
-  <a href="https://marketplace.visualstudio.com/items?itemName=CodingWithCalvin.LaunchyBar">
-    <img src="https://img.shields.io/visual-studio-marketplace/r/CodingWithCalvin.LaunchyBar?style=for-the-badge" alt="Rating">
+  <a href="https://marketplace.visualstudio.com/items?itemName=CodingWithCalvin.VS-LaunchyBar">
+    <img src="https://img.shields.io/visual-studio-marketplace/r/CodingWithCalvin.VS-LaunchyBar?style=for-the-badge" alt="Rating">
   </a>
 </p>
 
@@ -95,7 +95,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
    ```
    git clone https://github.com/CodingWithCalvin/VS-LaunchyBar.git
    ```
-2. Open `src/CodingWithCalvin.LaunchyBar.slnx` in Visual Studio 2022
+2. Open `src/CodingWithCalvin.VS-LaunchyBar.slnx` in Visual Studio 2022
 3. Build the solution (`Ctrl+Shift+B`)
 4. Press `F5` to launch the experimental instance
 5. Make your changes and submit a PR

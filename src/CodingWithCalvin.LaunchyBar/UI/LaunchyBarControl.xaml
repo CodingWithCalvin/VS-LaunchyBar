@@ -53,16 +53,27 @@
   <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
       <RowDefinition Height="*"/>
       <RowDefinition Height="Auto"/>
     </Grid.RowDefinitions>
 
-    <!-- Debug indicator -->
-    <TextBlock Grid.Row="0" Text="LB" Foreground="White" FontWeight="Bold"
-               HorizontalAlignment="Center" Margin="0,10,0,10"/>
+    <!-- LaunchyBar Logo -->
+    <Image Grid.Row="0"
+           Source="pack://application:,,,/CodingWithCalvin.LaunchyBar;component/Resources/logo-32.png"
+           Width="32" Height="32"
+           HorizontalAlignment="Center"
+           Margin="0,8,0,12"
+           ToolTip="LaunchyBar"/>
+
+    <!-- Separator -->
+    <Rectangle Grid.Row="1"
+               Height="1"
+               Margin="8,0,8,8"
+               Fill="{DynamicResource {x:Static vs:VsBrushes.CommandBarMenuSeparatorKey}}"/>
 
     <!-- Top Items (flow down) -->
-    <ItemsControl Grid.Row="1"
+    <ItemsControl Grid.Row="2"
                   ItemsSource="{Binding TopItems}"
                   VerticalAlignment="Top">
       <ItemsControl.ItemTemplate>
@@ -70,8 +81,7 @@
           <Button Style="{StaticResource LaunchyBarButtonStyle}"
                   Command="{Binding DataContext.LaunchCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                   CommandParameter="{Binding}"
-                  ToolTip="{Binding Name}"
-                  IsEnabled="{Binding IsEnabled}">
+                  ToolTip="{Binding Name}">
             <imaging:CrispImage Width="24" Height="24"
                                 Moniker="{Binding IconMoniker}" />
           </Button>
@@ -80,7 +90,7 @@
     </ItemsControl>
 
     <!-- Bottom Items (flow up) -->
-    <ItemsControl Grid.Row="2"
+    <ItemsControl Grid.Row="3"
                   ItemsSource="{Binding BottomItems}"
                   VerticalAlignment="Bottom">
       <ItemsControl.ItemTemplate>
@@ -88,8 +98,7 @@
           <Button Style="{StaticResource LaunchyBarButtonStyle}"
                   Command="{Binding DataContext.LaunchCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                   CommandParameter="{Binding}"
-                  ToolTip="{Binding Name}"
-                  IsEnabled="{Binding IsEnabled}">
+                  ToolTip="{Binding Name}">
             <imaging:CrispImage Width="24" Height="24"
                                 Moniker="{Binding IconMoniker}" />
           </Button>

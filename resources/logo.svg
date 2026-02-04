@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="1024" height="1024">
+  <!-- Sparkles/stars - purple tinted -->
+  <circle cx="8" cy="20" r="2" fill="#9B59B6"/>
+  <circle cx="8" cy="20" r="1" fill="#E8D5F2"/>
+  <circle cx="56" cy="44" r="1.5" fill="#8E44AD"/>
+  <circle cx="56" cy="44" r="0.75" fill="#E8D5F2"/>
+  <circle cx="12" cy="52" r="1" fill="#9B59B6"/>
+  <circle cx="52" cy="12" r="1.5" fill="#8E44AD"/>
+  <circle cx="52" cy="12" r="0.75" fill="#E8D5F2"/>
+
+  <!-- Small star shapes -->
+  <path d="M6 36 L7 34 L8 36 L10 35 L8 36 L9 38 L7 37 L5 38 L6 36 Z" fill="#9B59B6" opacity="0.8"/>
+  <path d="M58 28 L59 26 L60 28 L62 27 L60 28 L61 30 L59 29 L57 30 L58 28 Z" fill="#8E44AD" opacity="0.7"/>
+
+  <!-- Rocket tilted at 45 degrees like emoji style -->
+  <g transform="rotate(-45 32 32)">
+    <!-- Outer exhaust glow - purple -->
+    <ellipse cx="32" cy="58" rx="8" ry="8" fill="#68217A" opacity="0.3"/>
+    <ellipse cx="32" cy="56" rx="6" ry="6" fill="#8E44AD" opacity="0.4"/>
+
+    <!-- Flame trail - outer wisps left -->
+    <path d="M24 50 Q20 56 22 62 Q26 58 26 54 Q25 52 24 50 Z" fill="#68217A" opacity="0.7"/>
+
+    <!-- Flame trail - outer wisps right -->
+    <path d="M40 50 Q44 56 42 62 Q38 58 38 54 Q39 52 40 50 Z" fill="#68217A" opacity="0.7"/>
+
+    <!-- Flame trail - large outer (deep purple) -->
+    <path d="M26 48 Q22 56 28 64 Q32 68 36 64 Q42 56 38 48 Q36 54 34 58 Q32 60 30 58 Q28 54 26 48 Z"
+          fill="#68217A"/>
+
+    <!-- Flame trail - middle (VS purple) -->
+    <path d="M28 48 Q24 56 30 62 Q32 64 34 62 Q40 56 36 48 Q34 54 33 56 Q32 58 31 56 Q30 54 28 48 Z"
+          fill="#8E44AD"/>
+
+    <!-- Flame trail - inner (bright magenta) -->
+    <path d="M30 48 Q28 54 31 58 Q32 60 33 58 Q36 54 34 48 Q33 52 32 54 Q31 52 30 48 Z"
+          fill="#C678DD"/>
+
+    <!-- Flame trail - hot core (light magenta) -->
+    <path d="M31 48 Q30 52 31.5 55 Q32 56 32.5 55 Q34 52 33 48 Q32.5 50 32 51 Q31.5 50 31 48 Z"
+          fill="#E1A8F0"/>
+
+    <!-- Flame trail - white hot center -->
+    <ellipse cx="32" cy="50" rx="1.5" ry="2" fill="#F5E6FA"/>
+
+    <!-- Rocket body - sleek capsule shape -->
+    <path d="M32 8 C32 8 42 16 42 28 L42 42 C42 46 38 48 32 48 C26 48 22 46 22 42 L22 28 C22 16 32 8 32 8 Z"
+          fill="#E8E8E8" stroke="#A0A0A0" stroke-width="1.5"/>
+
+    <!-- Body left highlight -->
+    <path d="M32 8 C32 8 26 14 24 24 L24 40 C24 44 27 46 32 46 L32 8 Z"
+          fill="#F5F5F5" opacity="0.6"/>
+
+    <!-- Body right shadow -->
+    <path d="M32 8 C32 8 38 14 40 24 L40 40 C40 44 37 46 32 46 L32 8 Z"
+          fill="#C0C0C0" opacity="0.5"/>
+
+    <!-- Nose cone -->
+    <path d="M32 8 C32 8 40 16 40 24 C36 18 32 14 32 14 C32 14 28 18 24 24 C24 16 32 8 32 8 Z"
+          fill="#68217A" stroke="#4A1556" stroke-width="0.75"/>
+
+    <!-- Nose cone highlight -->
+    <path d="M32 8 C32 8 35 11 37 16 C34 13 32 11 32 11 C32 11 30 13 28 16 C30 11 32 8 32 8 Z"
+          fill="#8E44AD" opacity="0.7"/>
+
+    <!-- Body stripe -->
+    <rect x="22" y="32" width="20" height="5" fill="#68217A" stroke="#4A1556" stroke-width="0.5"/>
+    <rect x="22" y="32" width="10" height="5" fill="#8E44AD" opacity="0.4"/>
+
+    <!-- Window outer -->
+    <circle cx="32" cy="24" r="5" fill="#1E3A5F" stroke="#5F9EA0" stroke-width="1.5"/>
+    <!-- Window inner -->
+    <circle cx="32" cy="24" r="4" fill="#87CEEB"/>
+    <!-- Window reflection -->
+    <ellipse cx="30" cy="22" rx="1.5" ry="2" fill="white" opacity="0.8"/>
+    <circle cx="34" cy="26" r="0.75" fill="white" opacity="0.4"/>
+
+    <!-- Left fin -->
+    <path d="M22 38 L14 48 L22 44 Z" fill="#68217A" stroke="#4A1556" stroke-width="0.75"/>
+    <path d="M22 38 L18 43 L22 42 Z" fill="#8E44AD" opacity="0.5"/>
+
+    <!-- Right fin -->
+    <path d="M42 38 L50 48 L42 44 Z" fill="#4A1556" stroke="#4A1556" stroke-width="0.75"/>
+
+    <!-- Bottom fin -->
+    <path d="M29 46 L32 54 L35 46 Z" fill="#68217A" stroke="#4A1556" stroke-width="0.75"/>
+    <path d="M30 46 L32 52 L32 46 Z" fill="#8E44AD" opacity="0.5"/>
+  </g>
+</svg>

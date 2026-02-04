@@ -45,31 +45,21 @@ public sealed class LaunchyBarConfiguration
                 {
                     Id = "search",
                     Name = "Find in Files",
-                    IconPath = "KnownMonikers.SearchFiles",
+                    IconPath = "KnownMonikers.Search",
                     Type = LaunchItemType.VsCommand,
-                    Target = "Edit.FindinFiles",
+                    Target = "Edit.FindInFiles",
                     Position = LaunchItemPosition.Top,
                     Order = 1
                 },
                 new()
                 {
-                    Id = "terminal",
-                    Name = "Terminal",
-                    IconPath = "KnownMonikers.Console",
-                    Type = LaunchItemType.VsCommand,
-                    Target = "View.Terminal",
-                    Position = LaunchItemPosition.Top,
-                    Order = 2
-                },
-                new()
-                {
                     Id = "git-changes",
                     Name = "Git Changes",
-                    IconPath = "KnownMonikers.GitLogo",
-                    Type = LaunchItemType.VsCommand,
+                    IconPath = "KnownMonikers.Git",
+                    Type = LaunchItemType.ToolWindow,
                     Target = "View.GitWindow",
                     Position = LaunchItemPosition.Top,
-                    Order = 3
+                    Order = 2
                 },
                 new()
                 {
@@ -79,7 +69,17 @@ public sealed class LaunchyBarConfiguration
                     Type = LaunchItemType.VsCommand,
                     Target = "Debug.Start",
                     Position = LaunchItemPosition.Top,
-                    Order = 4
+                    Order = 3
+                },
+                new()
+                {
+                    Id = "terminal",
+                    Name = "Terminal",
+                    IconPath = "KnownMonikers.Console",
+                    Type = LaunchItemType.ToolWindow,
+                    Target = "View.Terminal",
+                    Position = LaunchItemPosition.Bottom,
+                    Order = 0
                 },
                 new()
                 {
@@ -89,7 +89,7 @@ public sealed class LaunchyBarConfiguration
                     Type = LaunchItemType.VsCommand,
                     Target = "Tools.Options",
                     Position = LaunchItemPosition.Bottom,
-                    Order = 0
+                    Order = 1
                 }
             }
         };

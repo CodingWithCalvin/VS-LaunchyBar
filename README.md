@@ -42,9 +42,8 @@ If you've used VS Code or JetBrains IDEs, you're probably familiar with the Acti
 
 - 🎯 **Quick Access** - Launch frequently used tools with a single click
 - 🔧 **VS Commands** - Execute any Visual Studio command directly
-- 🪟 **Tool Windows** - Toggle tool windows like Solution Explorer, Terminal, and Git Changes
-- 🚀 **External Programs** - Launch external applications from within VS
-- ⚙️ **Customizable** - Add, remove, and reorder items to fit your workflow
+- 🪟 **Tool Windows** - Toggle tool windows like Solution Explorer, Terminal, and Git Changes (click again to hide)
+- 🐞 **Smart Debug Button** - Automatically switches between Start and Stop based on debugger state
 - 🎨 **Native Look** - Seamlessly integrates with Visual Studio's theme
 
 ## 💡 Pro Tip
@@ -68,9 +67,23 @@ Download the latest `.vsix` file from the [Releases](https://github.com/CodingWi
 
 1. After installation, LaunchyBar automatically appears docked to the left side of Visual Studio
 2. Click any icon to execute its associated action
-3. To customize, go to **Tools** > **Options** > **LaunchyBar**
-4. Add your own commands, tool windows, or external programs
+3. Tool windows (Solution Explorer, Terminal, Git Changes) toggle on each click - click once to show, click again to hide
+4. The Debug button automatically shows "Start Debugging" or "Stop Debugging" based on the current debugger state
 5. Enjoy quick access to your favorite tools! 🎉
+
+## 📋 Default Items
+
+LaunchyBar comes preconfigured with these items:
+
+**Top Section:**
+- 📂 Solution Explorer
+- 🔍 Find in Files
+- 🔀 Git Changes
+- ▶️ Debug (Start/Stop)
+
+**Bottom Section:**
+- 💻 Terminal
+- ⚙️ Settings
 
 ## 🤝 Contributing
 

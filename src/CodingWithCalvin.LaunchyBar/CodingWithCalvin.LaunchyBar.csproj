@@ -21,13 +21,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="..\..\resources\logo-32.png" Link="Resources\logo-32.png" />
     <Content Include="..\..\resources\logo.png" Link="Resources\logo.png">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="..\..\resources\preview.png" Link="Resources\preview.png">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="..\..\resources\CommandIcon.png" Link="Resources\CommandIcon.png">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="..\..\LICENSE" Link="Resources\LICENSE">

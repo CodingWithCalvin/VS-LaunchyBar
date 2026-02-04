@@ -1,4 +1,6 @@
 using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 using Microsoft.VisualStudio.Imaging;
 using Microsoft.VisualStudio.Imaging.Interop;
@@ -8,8 +10,14 @@ namespace CodingWithCalvin.LaunchyBar.Models;
 /// <summary>
 /// Represents a single item in the LaunchyBar.
 /// </summary>
-public sealed class LaunchItem
+public sealed class LaunchItem : INotifyPropertyChanged
 {
+    private string _iconPath = string.Empty;
+    private string _name = string.Empty;
+
+    /// <inheritdoc/>
+    public event PropertyChangedEventHandler? PropertyChanged;
+
     /// <summary>
     /// Unique identifier for the launch item.
     /// </summary>
@@ -18,12 +26,35 @@ public sealed class LaunchItem
     /// <summary>
     /// Display name shown in tooltip.
     /// </summary>
-    public string Name { get; set; } = string.Empty;
+    public string Name
+    {
+        get => _name;
+        set
+        {
+            if (_name != value)
+            {
+                _name = value;
+                OnPropertyChanged();
+            }
+        }
+    }
 
     /// <summary>
     /// Path to icon file, embedded resource, or VS ImageMoniker name.
     /// </summary>
-    public string IconPath { get; set; } = string.Empty;
+    public string IconPath
+    {
+        get => _iconPath;
+        set
+        {
+            if (_iconPath != value)
+            {
+                _iconPath = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(IconMoniker));
+            }
+        }
+    }
 
     /// <summary>
     /// The type of action this item performs.
@@ -84,5 +115,10 @@ public sealed class LaunchItem
         }
 
         return KnownMonikers.QuestionMark;
+    }
+
+    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

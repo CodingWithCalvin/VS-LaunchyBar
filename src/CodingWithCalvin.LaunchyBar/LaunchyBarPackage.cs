@@ -1,8 +1,6 @@
 using System;
-using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
-using CodingWithCalvin.LaunchyBar.Options;
 using CodingWithCalvin.LaunchyBar.Services;
 using CodingWithCalvin.Otel4Vsix;
 using Microsoft.VisualStudio;
@@ -12,9 +10,8 @@ using Task = System.Threading.Tasks.Task;
 namespace CodingWithCalvin.LaunchyBar;
 
 [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
-[Guid(VSCommandTableVsct.guidLaunchyBarPackageString)]
+[Guid("F1D884BA-D328-4A15-89F4-ECACCCD022D1")]
 [ProvideAutoLoad(VSConstants.UICONTEXT.ShellInitialized_string, PackageAutoLoadFlags.BackgroundLoad)]
-[ProvideOptionPage(typeof(OptionsProvider.GeneralOptionsPage), "LaunchyBar", "General", 0, 0, true)]
 public sealed class LaunchyBarPackage : AsyncPackage
 {
     public static LaunchyBarPackage? Instance { get; private set; }
@@ -22,6 +19,7 @@ public sealed class LaunchyBarPackage : AsyncPackage
     private IConfigurationService? _configurationService;
     private ILaunchService? _launchService;
     private IShellInjectionService? _shellInjectionService;
+    private DebugStateService? _debugStateService;
 
     protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
     {
@@ -47,46 +45,32 @@ public sealed class LaunchyBarPackage : AsyncPackage
 
         try
         {
-            Debug.WriteLine("LaunchyBar: Initializing services...");
-
             // Initialize services
             _configurationService = new ConfigurationService();
-            Debug.WriteLine("LaunchyBar: ConfigurationService created");
-
             _launchService = new LaunchService(this);
-            Debug.WriteLine("LaunchyBar: LaunchService created");
-
-            // Inject the bar into VS shell with retries
-            Debug.WriteLine("LaunchyBar: Creating ShellInjectionService...");
             _shellInjectionService = new ShellInjectionService(_configurationService, _launchService);
-            Debug.WriteLine("LaunchyBar: ShellInjectionService created");
 
-            // Retry injection until successful or max attempts reached
-            const int maxAttempts = 10;
+            // Try injection immediately, then retry with increasing delays
+            const int maxAttempts = 8;
+            int delayMs = 100;
+
             for (int attempt = 1; attempt <= maxAttempts; attempt++)
             {
-                Debug.WriteLine($"LaunchyBar: Injection attempt {attempt}/{maxAttempts}...");
-                await Task.Delay(1000, cancellationToken);
-                await JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
-
-                var result = _shellInjectionService.Inject();
-                if (result)
+                if (_shellInjectionService.Inject())
                 {
-                    Debug.WriteLine("LaunchyBar: Injection successful!");
+                    _debugStateService = new DebugStateService(this, _configurationService);
                     break;
                 }
 
-                Debug.WriteLine($"LaunchyBar: Attempt {attempt} failed, will retry...");
+                // Wait before next attempt (100, 200, 400, 800, 1000, 1000, 1000, 1000)
+                await Task.Delay(delayMs, cancellationToken);
+                await JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+                delayMs = Math.Min(delayMs * 2, 1000);
             }
         }
-        catch (Exception ex)
+        catch
         {
-            Debug.WriteLine($"LaunchyBar: EXCEPTION - {ex.GetType().Name}: {ex.Message}");
-            Debug.WriteLine($"LaunchyBar: Stack trace: {ex.StackTrace}");
-            if (ex.InnerException != null)
-            {
-                Debug.WriteLine($"LaunchyBar: Inner exception - {ex.InnerException.GetType().Name}: {ex.InnerException.Message}");
-            }
+            // Initialization failed - extension will not be functional
         }
     }
 
@@ -94,6 +78,7 @@ public sealed class LaunchyBarPackage : AsyncPackage
     {
         if (disposing)
         {
+            _debugStateService?.Dispose();
             _shellInjectionService?.Dispose();
             Instance = null;
             VsixTelemetry.Shutdown();

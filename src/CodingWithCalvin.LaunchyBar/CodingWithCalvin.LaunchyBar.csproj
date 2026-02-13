@@ -7,6 +7,9 @@
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <StartAction>Program</StartAction>
+    <StartProgram>$(DevEnvDir)devenv.exe</StartProgram>
+    <StartArguments>/rootSuffix Exp</StartArguments>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,5 +31,9 @@
     <Content Include="..\..\LICENSE" Link="Resources\LICENSE">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
 </Project>

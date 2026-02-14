@@ -1,8 +1,8 @@
 {
   "profiles": {
-    "Debug Extension w/2026": {
+    "Debug Extension": {
       "commandName": "Executable",
-      "executablePath": "C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\Common7\\IDE\\devenv.exe",
+      "executablePath": "C:\\Program Files\\Microsoft Visual Studio\\18\\Preview\\Common7\\IDE\\devenv.exe",
       "commandLineArgs": "/rootSuffix Exp"
     }
   }

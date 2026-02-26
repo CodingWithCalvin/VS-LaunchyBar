@@ -14,6 +14,4 @@ jobs:
       extension-name: LaunchyBar
       display-name: 'LaunchyBar'
       marketplace-id: CodingWithCalvin.VS-LaunchyBar
-      description: 'A narrow icon launcher bar for Visual Studio, similar to VS Code Activity Bar'
-      hashtags: '#visualstudio #vsix #productivity'
     secrets: inherit

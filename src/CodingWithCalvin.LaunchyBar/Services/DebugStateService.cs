@@ -61,6 +61,15 @@ public sealed class DebugStateService : IDisposable
             debugItem.IconPath = isDebugging ? "KnownMonikers.Stop" : "KnownMonikers.Run";
             debugItem.Name = isDebugging ? "Stop Debugging" : "Start Debugging";
         }
+
+        var startWithoutDebuggingItem = _configurationService.Configuration.Items
+            .FirstOrDefault(i => i.Id == "start-without-debugging" || i.Target == "Debug.StartWithoutDebugging");
+
+        if (startWithoutDebuggingItem != null)
+        {
+            startWithoutDebuggingItem.IconPath = isDebugging ? "KnownMonikers.Stop" : "KnownMonikers.RunOutline";
+            startWithoutDebuggingItem.Name = isDebugging ? "Stop Debugging" : "Start Without Debugging";
+        }
     }
 
     public void Dispose()

@@ -20,6 +20,7 @@ public sealed class LaunchyBarPackage : AsyncPackage
     private ILaunchService? _launchService;
     private IShellInjectionService? _shellInjectionService;
     private DebugStateService? _debugStateService;
+    private ToolWindowMonitorService? _toolWindowMonitorService;
 
     protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
     {
@@ -59,6 +60,7 @@ public sealed class LaunchyBarPackage : AsyncPackage
                 if (_shellInjectionService.Inject())
                 {
                     _debugStateService = new DebugStateService(this, _configurationService);
+                    _toolWindowMonitorService = new ToolWindowMonitorService(this, _configurationService);
                     break;
                 }
 
@@ -78,6 +80,7 @@ public sealed class LaunchyBarPackage : AsyncPackage
     {
         if (disposing)
         {
+            _toolWindowMonitorService?.Dispose();
             _debugStateService?.Dispose();
             _shellInjectionService?.Dispose();
             Instance = null;

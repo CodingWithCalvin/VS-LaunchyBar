@@ -14,6 +14,7 @@ public sealed class LaunchItem : INotifyPropertyChanged
 {
     private string _iconPath = string.Empty;
     private string _name = string.Empty;
+    private bool _isActive;
 
     /// <inheritdoc/>
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -90,6 +91,23 @@ public sealed class LaunchItem : INotifyPropertyChanged
     /// Whether this item is enabled.
     /// </summary>
     public bool IsEnabled { get; set; } = true;
+
+    /// <summary>
+    /// Whether this item's tool window is currently visible.
+    /// </summary>
+    [JsonIgnore]
+    public bool IsActive
+    {
+        get => _isActive;
+        set
+        {
+            if (_isActive != value)
+            {
+                _isActive = value;
+                OnPropertyChanged();
+            }
+        }
+    }
 
     /// <summary>
     /// Gets the ImageMoniker for this item's icon.

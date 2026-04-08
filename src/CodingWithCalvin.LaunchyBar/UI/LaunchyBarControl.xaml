@@ -10,11 +10,13 @@
              Background="{DynamicResource {x:Static vs:VsBrushes.ToolWindowBackgroundKey}}">
 
   <UserControl.Resources>
+    <BooleanToVisibilityConverter x:Key="BoolToVisibility"/>
+
     <Style x:Key="LaunchyBarButtonStyle" TargetType="Button">
-      <Setter Property="Width" Value="40"/>
+      <Setter Property="Width" Value="44"/>
       <Setter Property="Height" Value="40"/>
-      <Setter Property="Margin" Value="4"/>
-      <Setter Property="Padding" Value="8"/>
+      <Setter Property="Margin" Value="0,4"/>
+      <Setter Property="Padding" Value="0"/>
       <Setter Property="BorderThickness" Value="0"/>
       <Setter Property="Background" Value="Transparent"/>
       <Setter Property="Foreground" Value="{DynamicResource {x:Static vs:VsBrushes.CommandBarTextActiveKey}}"/>
@@ -22,15 +24,31 @@
       <Setter Property="Template">
         <Setter.Value>
           <ControlTemplate TargetType="Button">
-            <Border x:Name="Border"
-                    Background="{TemplateBinding Background}"
-                    BorderBrush="{TemplateBinding BorderBrush}"
-                    BorderThickness="{TemplateBinding BorderThickness}"
-                    CornerRadius="4"
-                    Padding="{TemplateBinding Padding}">
-              <ContentPresenter HorizontalAlignment="Center"
-                                VerticalAlignment="Center"/>
-            </Border>
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3"/>
+                <ColumnDefinition Width="*"/>
+              </Grid.ColumnDefinitions>
+
+              <!-- Active indicator bar on the left edge -->
+              <Rectangle x:Name="ActiveIndicator"
+                         Grid.Column="0"
+                         Fill="{DynamicResource {x:Static vs:VsBrushes.AccentMediumKey}}"
+                         RadiusX="1" RadiusY="1"
+                         Margin="0,6"
+                         Visibility="Collapsed"/>
+
+              <Border x:Name="Border"
+                      Grid.Column="1"
+                      Background="{TemplateBinding Background}"
+                      BorderBrush="{TemplateBinding BorderBrush}"
+                      BorderThickness="{TemplateBinding BorderThickness}"
+                      CornerRadius="4"
+                      Padding="8">
+                <ContentPresenter HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"/>
+              </Border>
+            </Grid>
             <ControlTemplate.Triggers>
               <Trigger Property="IsMouseOver" Value="True">
                 <Setter TargetName="Border" Property="Background"
@@ -43,6 +61,9 @@
               <Trigger Property="IsEnabled" Value="False">
                 <Setter Property="Opacity" Value="0.5"/>
               </Trigger>
+              <DataTrigger Binding="{Binding IsActive}" Value="True">
+                <Setter TargetName="ActiveIndicator" Property="Visibility" Value="Visible"/>
+              </DataTrigger>
             </ControlTemplate.Triggers>
           </ControlTemplate>
         </Setter.Value>

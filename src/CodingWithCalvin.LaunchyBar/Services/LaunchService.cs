@@ -71,9 +71,10 @@ public sealed class LaunchService : ILaunchService
 
                 case LaunchItemType.VsCommand:
                     // Special handling for debug commands
-                    if (item.Target.Equals("Debug.Start", StringComparison.OrdinalIgnoreCase))
+                    if (item.Target.Equals("Debug.Start", StringComparison.OrdinalIgnoreCase) ||
+                        item.Target.Equals("Debug.StartWithoutDebugging", StringComparison.OrdinalIgnoreCase))
                     {
-                        await ToggleDebugAsync();
+                        await ToggleDebugAsync(item.Target);
                     }
                     else
                     {
@@ -201,14 +202,14 @@ public sealed class LaunchService : ILaunchService
         }
     }
 
-    private async Task ToggleDebugAsync()
+    private async Task ToggleDebugAsync(string startCommand)
     {
         await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
         var dte = await _package.GetServiceAsync(typeof(DTE)) as DTE2;
         if (dte == null)
         {
-            await VS.Commands.ExecuteAsync("Debug.Start");
+            await VS.Commands.ExecuteAsync(startCommand);
             return;
         }
 
@@ -221,8 +222,8 @@ public sealed class LaunchService : ILaunchService
         }
         else
         {
-            // Not debugging - start
-            await VS.Commands.ExecuteAsync("Debug.Start");
+            // Not debugging - start with the specified command
+            await VS.Commands.ExecuteAsync(startCommand);
         }
     }
 

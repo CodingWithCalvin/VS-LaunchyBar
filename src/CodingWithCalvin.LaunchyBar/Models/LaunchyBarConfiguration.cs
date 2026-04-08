@@ -73,6 +73,16 @@ public sealed class LaunchyBarConfiguration
                 },
                 new()
                 {
+                    Id = "start-without-debugging",
+                    Name = "Start Without Debugging",
+                    IconPath = "KnownMonikers.RunOutline",
+                    Type = LaunchItemType.VsCommand,
+                    Target = "Debug.StartWithoutDebugging",
+                    Position = LaunchItemPosition.Top,
+                    Order = 4
+                },
+                new()
+                {
                     Id = "terminal",
                     Name = "Terminal",
                     IconPath = "KnownMonikers.Console",

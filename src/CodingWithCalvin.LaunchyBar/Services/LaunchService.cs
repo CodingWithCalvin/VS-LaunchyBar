@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using CodingWithCalvin.LaunchyBar.Models;
 using CodingWithCalvin.Otel4Vsix;
@@ -18,6 +19,7 @@ namespace CodingWithCalvin.LaunchyBar.Services;
 public sealed class LaunchService : ILaunchService
 {
     private readonly AsyncPackage _package;
+    private readonly IConfigurationService _configurationService;
 
     /// <summary>
     /// Maps VS View commands to their tool window GUIDs for toggle support.
@@ -37,9 +39,10 @@ public sealed class LaunchService : ILaunchService
         { "View.GitWindow", new Guid("1c64b9c2-e352-428e-a56d-0ace190b99a6") },
     };
 
-    public LaunchService(AsyncPackage package)
+    public LaunchService(AsyncPackage package, IConfigurationService configurationService)
     {
         _package = package;
+        _configurationService = configurationService;
     }
 
     /// <inheritdoc/>
@@ -147,8 +150,55 @@ public sealed class LaunchService : ILaunchService
             }
         }
 
-        // Window not found or hidden - show it via command
+        // Window not found or hidden - hide other configured tool windows, then show this one
+        await HideOtherToolWindowsAsync(item);
         await VS.Commands.ExecuteAsync(item.Target);
+    }
+
+    private async Task HideOtherToolWindowsAsync(LaunchItem currentItem)
+    {
+        await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+        var shell = await _package.GetServiceAsync(typeof(SVsUIShell)) as IVsUIShell;
+        if (shell == null) return;
+
+        // Collect GUIDs of other configured tool window items
+        var otherGuids = _configurationService.Configuration.Items
+            .Where(i => i.Type == LaunchItemType.ToolWindow
+                     && !i.Target.Equals(currentItem.Target, StringComparison.OrdinalIgnoreCase))
+            .Select(i => ToolWindowGuids.TryGetValue(i.Target, out var g) ? g : (Guid?)null)
+            .Where(g => g.HasValue)
+            .Select(g => g!.Value)
+            .ToHashSet();
+
+        if (otherGuids.Count == 0) return;
+
+        shell.GetToolWindowEnum(out var windowEnum);
+        if (windowEnum == null) return;
+
+        var frames = new IVsWindowFrame[1];
+        while (windowEnum.Next(1, frames, out var fetched) == 0 && fetched == 1)
+        {
+            var frame = frames[0];
+            if (frame == null) continue;
+
+            try
+            {
+                frame.GetGuidProperty((int)__VSFPROPID.VSFPROPID_GuidPersistenceSlot, out var persistGuid);
+                if (otherGuids.Contains(persistGuid))
+                {
+                    frame.IsOnScreen(out var isOnScreen);
+                    if (isOnScreen != 0)
+                    {
+                        frame.Hide();
+                    }
+                }
+            }
+            catch
+            {
+                // Some frames may throw
+            }
+        }
     }
 
     private async Task ToggleDebugAsync()

@@ -48,7 +48,7 @@ public sealed class LaunchyBarPackage : AsyncPackage
         {
             // Initialize services
             _configurationService = new ConfigurationService();
-            _launchService = new LaunchService(this);
+            _launchService = new LaunchService(this, _configurationService);
             _shellInjectionService = new ShellInjectionService(_configurationService, _launchService);
 
             // Try injection immediately, then retry with increasing delays

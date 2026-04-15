@@ -17,21 +17,6 @@
   </a>
 </p>
 
-<p align="center">
-  <a href="https://marketplace.visualstudio.com/items?itemName=CodingWithCalvin.VS-LaunchyBar">
-    <img src="https://img.shields.io/visual-studio-marketplace/v/CodingWithCalvin.VS-LaunchyBar?style=for-the-badge" alt="Marketplace Version">
-  </a>
-  <a href="https://marketplace.visualstudio.com/items?itemName=CodingWithCalvin.VS-LaunchyBar">
-    <img src="https://img.shields.io/visual-studio-marketplace/i/CodingWithCalvin.VS-LaunchyBar?style=for-the-badge" alt="Installs">
-  </a>
-  <a href="https://marketplace.visualstudio.com/items?itemName=CodingWithCalvin.VS-LaunchyBar">
-    <img src="https://img.shields.io/visual-studio-marketplace/d/CodingWithCalvin.VS-LaunchyBar?style=for-the-badge" alt="Downloads">
-  </a>
-  <a href="https://marketplace.visualstudio.com/items?itemName=CodingWithCalvin.VS-LaunchyBar">
-    <img src="https://img.shields.io/visual-studio-marketplace/r/CodingWithCalvin.VS-LaunchyBar?style=for-the-badge" alt="Rating">
-  </a>
-</p>
-
 ---
 
 ## 🤔 Why?
